@@ -202,7 +202,20 @@ app.get('/api/session', (req, res) => {
   res.json({ active: !!(sess && Object.keys(sess.erpCookieMap).length > 0) });
 });
 
+// ── Serve React frontend (production) ──────────────────────────────────────
+const path = require('path');
+const distPath = path.join(__dirname, '../dist');
+
+app.use(express.static(distPath));
+
+// All non-API routes → React's index.html (handles React Router)
+app.get('*', (req, res) => {
+  if (!req.path.startsWith('/api')) {
+    res.sendFile(path.join(distPath, 'index.html'));
+  }
+});
+
 app.listen(PORT, () => {
-  console.log(`\n🚀 ERP Proxy running at http://localhost:${PORT}`);
+  console.log(`\n🚀 ERP Proxy + Frontend running at http://localhost:${PORT}`);
   console.log(`   ERP: ${ERP_BASE}\n`);
 });
