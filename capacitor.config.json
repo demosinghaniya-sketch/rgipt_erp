@@ -1,0 +1,10 @@
+{
+  "appId": "com.rgipt.erp",
+  "appName": "RGIPT ERP",
+  "webDir": "dist",
+  "bundledWebRuntime": false,
+  "server": {
+    "url": "https://rgipterp-production.up.railway.app/",
+    "cleartext": true
+  }
+}
