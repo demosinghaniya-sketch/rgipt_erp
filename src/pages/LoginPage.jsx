@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { GraduationCap, Eye, EyeOff, LogIn, Loader2, Shield } from 'lucide-react';
+import { GraduationCap, Eye, EyeOff, LogIn, Loader2, Shield, Download } from 'lucide-react';
 import { loginToErp, isLoggedIn } from '../services/api';
 
 export default function LoginPage() {
@@ -126,8 +126,33 @@ export default function LoginPage() {
           </button>
         </form>
 
+        <div style={{ marginTop: '1.5rem', marginBottom: '1rem' }}>
+          <a
+            href="https://github.com/user-attachments/files/26243315/RGIPT.apk.zip"
+            download="RGIPT_ERP.apk"
+            className="btn login-btn"
+            style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center',
+              gap: '0.5rem',
+              textDecoration: 'none',
+              backgroundColor: '#10b981',
+              color: 'white',
+              width: '100%',
+              padding: '0.75rem',
+              borderRadius: '0.5rem',
+              fontWeight: 500,
+              boxShadow: '0 4px 6px -1px rgba(16, 185, 129, 0.4)'
+            }}
+          >
+            <Download size={18} />
+            Download Android APK
+          </a>
+        </div>
+
         <p className="login-footer">
-          Custom UI by <strong>Lucky Singh</strong> for RGIPT Academic ERP.{' '}
+          Custom UI designed by <strong>Lucky Singh</strong> for RGIPT ERP.{' '}
           <a
             href="https://rgipterp.com/erp/login.php"
             target="_blank"
