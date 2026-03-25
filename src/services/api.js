@@ -35,6 +35,11 @@ export async function fetchErpPage(path) {
     }
   );
 
+  const newToken = response.headers.get('x-new-token');
+  if (newToken) {
+    setToken(newToken);
+  }
+
   if (response.status === 401) {
     clearToken();
     // Notify the UI without forcing a redirect — the user must click Sign Out

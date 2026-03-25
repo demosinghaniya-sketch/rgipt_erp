@@ -23,18 +23,38 @@ const COMMON_HEADERS = {
   Connection: 'keep-alive',
 };
 
-// ── In-memory session store: token → { erpCookieMap, createdAt } ──────────
-const sessions = new Map();
+// ── Stateless Session Store using Token Encryption ──────────
+const SESSION_SECRET = process.env.SESSION_SECRET || 'a_secure_fallback_secret_for_ergipterp__';
+const ENCRYPTION_KEY = crypto.scryptSync(SESSION_SECRET, 'salt', 32);
 
-// Clean up sessions older than 6 hours
-setInterval(() => {
-  const cutoff = Date.now() - 6 * 60 * 60 * 1000;
-  for (const [token, data] of sessions.entries()) {
-    if (data.createdAt < cutoff) sessions.delete(token);
+function encryptSession(data) {
+  const iv = crypto.randomBytes(16);
+  const cipher = crypto.createCipheriv('aes-256-cbc', ENCRYPTION_KEY, iv);
+  let encrypted = cipher.update(JSON.stringify(data), 'utf8', 'hex');
+  encrypted += cipher.final('hex');
+  return Buffer.from(`${iv.toString('hex')}:${encrypted}`).toString('base64');
+}
+
+function decryptSession(token) {
+  try {
+    const decoded = Buffer.from(token, 'base64').toString('ascii');
+    const parts = decoded.split(':');
+    if (parts.length !== 2) return null;
+    const iv = Buffer.from(parts[0], 'hex');
+    const decipher = crypto.createDecipheriv('aes-256-cbc', ENCRYPTION_KEY, iv);
+    let decrypted = decipher.update(parts[1], 'hex', 'utf8');
+    decrypted += decipher.final('utf8');
+    return JSON.parse(decrypted);
+  } catch (err) {
+    return null;
   }
-}, 30 * 60 * 1000);
+}
 
-app.use(cors({ origin: allowedOrigins, credentials: true }));
+app.use(cors({ 
+  origin: allowedOrigins, 
+  credentials: true,
+  exposedHeaders: ['x-new-token'] 
+}));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -62,11 +82,19 @@ function serialise(map) {
   return Object.entries(map).map(([k, v]) => `${k}=${v}`).join('; ');
 }
 
-// ── Auth middleware: read token from Authorization header ──────────────────
+// ── Auth middleware: decrypt token from Authorization header ──────────────────
 function getSession(req) {
   const auth = req.headers['authorization'] || '';
   const token = auth.replace('Bearer ', '').trim();
-  return token ? sessions.get(token) : null;
+  if (!token) return null;
+  const sess = decryptSession(token);
+  if (!sess) return null;
+  
+  // Expiry check (6 hours)
+  const cutoff = Date.now() - 6 * 60 * 60 * 1000;
+  if (sess.createdAt < cutoff) return null;
+
+  return sess;
 }
 
 // ── Generic proxy ──────────────────────────────────────────────────────────
@@ -91,6 +119,7 @@ app.get('/api/proxy', async (req, res) => {
     const newCookies = parseSetCookies(response.headers);
     if (Object.keys(newCookies).length > 0) {
       sess.erpCookieMap = mergeCookies(sess.erpCookieMap, newCookies);
+      res.setHeader('x-new-token', encryptSession(sess));
     }
 
     if (response.status === 301 || response.status === 302) {
@@ -176,9 +205,8 @@ app.post('/api/login', async (req, res) => {
           cookieMap = mergeCookies(cookieMap, parseSetCookies(followResp.headers));
         }
 
-        // Create a token and store session in memory
-        const token = crypto.randomBytes(32).toString('hex');
-        sessions.set(token, { erpCookieMap: cookieMap, createdAt: Date.now() });
+        // Create a stateless encrypted token
+        const token = encryptSession({ erpCookieMap: cookieMap, createdAt: Date.now() });
         console.log(`[login] ✅ Login success. Token created, ${Object.keys(cookieMap).length} cookies stored.`);
         return res.json({ success: true, token });
       } else {
