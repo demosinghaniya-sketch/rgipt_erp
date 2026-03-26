@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { GraduationCap, Eye, EyeOff, LogIn, Loader2, Shield, Download } from 'lucide-react';
 import { loginToErp, isLoggedIn } from '../services/api';
+import { Capacitor } from '@capacitor/core';
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -126,30 +127,32 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <div style={{ marginTop: '1.5rem', marginBottom: '1rem' }}>
-          <a  
-            href="https://github.com/codeXlucky12/rgipt_erp/releases/download/apkv0.0.1/RGIPT-nexus-v1.0.apk"
-            download="RGIPT_ERP.apk"
-            className="btn login-btn"
-            style={{ 
-              display: 'flex', 
-              alignItems: 'center', 
-              justifyContent: 'center',
-              gap: '0.5rem',
-              textDecoration: 'none',
-              backgroundColor: '#10b981',
-              color: 'white',
-              width: '100%',
-              padding: '0.75rem',
-              borderRadius: '0.5rem',
-              fontWeight: 500,
-              boxShadow: '0 4px 6px -1px rgba(16, 185, 129, 0.4)'
-            }}
-          >
-            <Download size={18} />
-            Download Android APK
-          </a>
-        </div>
+        {!Capacitor.isNativePlatform() && (
+          <div style={{ marginTop: '1.5rem', marginBottom: '1rem' }}>
+            <a  
+              href="https://github.com/codeXlucky12/rgipt_erp/releases/download/apkv0.0.2/RGIPT-nexusv0.0.2.apk"
+              download="RGIPT_ERP.apk"
+              className="btn login-btn"
+              style={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center',
+                gap: '0.5rem',
+                textDecoration: 'none',
+                backgroundColor: '#10b981',
+                color: 'white',
+                width: '100%',
+                padding: '0.75rem',
+                borderRadius: '0.5rem',
+                fontWeight: 500,
+                boxShadow: '0 4px 6px -1px rgba(16, 185, 129, 0.4)'
+              }}
+            >
+              <Download size={18} />
+              Download Android APK
+            </a>
+          </div>
+        )}
 
         <p className="login-footer">
           Custom UI designed by <strong>Lucky Singh</strong> for RGIPT ERP.{' '}
