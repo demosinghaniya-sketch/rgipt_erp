@@ -130,7 +130,7 @@ export default function LoginPage() {
         {!Capacitor.isNativePlatform() && (
           <div style={{ marginTop: '1.5rem', marginBottom: '1rem' }}>
             <a  
-              href="https://github.com/codeXlucky12/rgipt_erp/releases/download/apkv0.0.2/RGIPT-nexusv0.0.2.apk"
+              href="https://github.com/codeXlucky12/rgipt_erp/releases/download/apkv0.0.2/RGIPT-nexus-v0.0.2.apk"
               download="RGIPT_ERP.apk"
               className="btn login-btn"
               style={{ 

@@ -1,6 +1,6 @@
 {
   "version": "0.0.2",
-  "versionCode": 2,
-  "downloadUrl": "https://github.com/codeXlucky12/rgipt_erp/releases/download/apkv0.0.2/RGIPT-nexusv0.0.2.apk",
+  "versionCode":0.2,
+  "downloadUrl": "https://github.com/codeXlucky12/rgipt_erp/releases/download/apkv0.0.2/RGIPT-nexus-v0.0.2.apk",
   "message": "A new important update is available! Note: If you get a 'package conflict' error during installation, please manually uninstall this old app first, then reinstall. (This uninstall step is a one-time requirement for this major update)."
 }
