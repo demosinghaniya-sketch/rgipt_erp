@@ -128,7 +128,7 @@ export default function LoginPage() {
 
         <div style={{ marginTop: '1.5rem', marginBottom: '1rem' }}>
           <a  
-            href="https://github.com/codeXlucky12/rgipt_erp/releases/download/apkv0.0.1/app-debug.apk.zip"
+            href="https://github.com/codeXlucky12/rgipt_erp/releases/download/apkv0.0.1/RGIPT-nexus-v1.0.apk"
             download="RGIPT_ERP.apk"
             className="btn login-btn"
             style={{ 
