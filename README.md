@@ -23,10 +23,11 @@ App: Android (WebView using Capacitor)
 Hosting: Railway / Vercel
 📥 Installation
 🌐 Use Website
-
 Simply open:
 https://rgipt-erp.vercel.app/login
+
 📱 Install APK
+link (https://github.com/codeXlucky12/rgipt_erp/releases/download/apkv0.0.1/RGIPT-nexus-v1.0.apk)
 Go to the Releases section of this repository
 Download the .apk file
 Install it on your Android device
